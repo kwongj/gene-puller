@@ -1,5 +1,5 @@
 # gene-puller
-Reworked version of Torsten Seeman's gene-puller.pl script. Retrieves aligned gene sequences from assemblies.
+Reworked version of Torsten Seemann's gene-puller.pl script. Retrieves aligned gene sequences from assemblies.
 
 ##Author
 
