@@ -44,7 +44,7 @@ def facheck(f):
 	s.close()
 
 # Get sequences from FASTA files
-def seqBLAST(f):
+def seqBLAST(f, id, cov):
 	msg('Extracting sequences from {} ...'.format(f))
 	result = []
 	for seq in SeqIO.parse(args.genes[0], 'fasta'):
@@ -75,14 +75,14 @@ parser = argparse.ArgumentParser(
 	description='Searches FASTA files for specified query sequences and outputs ClustalW alignment',
 	usage='\n  %(prog)s --genes FASTA [OPTIONS] FASTA1 FASTA2 FASTA3 ... FASTAN')
 parser.add_argument('fasta', metavar='FASTA', nargs='+', help='FASTA file to search (required)')
-parser.add_argument('--genes', metavar='FASTA', required=True, nargs=1, help='File of query genes in FASTA format (required)')
-parser.add_argument('--out', metavar='FILE', nargs=1, help='Output file')
+parser.add_argument('--genes', metavar='FASTA', required=True, nargs=1, help='file of query genes in FASTA format (required)')
+parser.add_argument('--out', metavar='FILE', nargs=1, help='output file')
+parser.add_argument('--id', metavar='%', nargs=1, default='90', help='percentage identity for BLAST match')
+parser.add_argument('--cov', metavar='%', nargs=1, default='80', help='percentage coverage for BLAST match')
 parser.add_argument('--version', action='version', version=
-	'=====================================\n'
 	'%(prog)s v0.1\n'
 	'Updated 27-Sep-2016 by Jason Kwong\n'
-	'Dependencies: Python 2.x, BioPython, BLAST\n'
-	'=====================================')
+	'Dependencies: Python 2.x, BioPython, BLAST')
 args = parser.parse_args()
 
 # Set buffer size
@@ -93,7 +93,7 @@ geneSEQS = {}
 for f in args.fasta:
 	f_id = os.path.basename(f)
 	f_id = '>' + f_id
-	geneLIST = seqBLAST(f)
+	geneLIST = seqBLAST(f, args.id[0], args.cov[0])
 	geneSEQ = buffer.join(geneLIST)
 	geneSEQS[f_id] = geneSEQ
 

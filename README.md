@@ -1,17 +1,17 @@
 # gene-puller
 Reworked version of Torsten Seeman's gene-puller.pl script. Retrieves aligned gene sequences from assemblies.
 
-##Author
+## Author
 
 Jason Kwong (@kwongjc)
 
-##Dependencies
+## Dependencies
 * Python 2.7.x
 * BLAST+
 * MUSCLE
 * BioPython
 
-##Usage
+## Usage
 
 ```
 $ gene-puller.py -h
@@ -25,15 +25,17 @@ positional arguments:
 
 optional arguments:
   -h, --help     show this help message and exit
-  --genes FASTA  File of query genes in FASTA format (required)
-  --out FILE     Output file
+  --genes FASTA  file of query genes in FASTA format (required)
+  --out FILE     output file
+  --id %         percentage identity for BLAST match
+  --cov %        percentage coverage for BLAST match
   --version      show program's version number and exit
 ```
 
-##Bugs
+## Bugs
 
 Please submit via the [GitHub issues page](https://github.com/kwongj/gene-puller/issues).  
 
-##Software Licence
+## Software Licence
 
 [GPLv3](https://github.com/kwongj/gene-puller/blob/master/LICENSE)
