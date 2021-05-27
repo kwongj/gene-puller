@@ -1,16 +1,13 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # Script by Jason Kwong
 # Retrieve genes and construct alignemnt
-
-# Use modern print function from python 3.x
-from __future__ import print_function
 
 # Modules
 import argparse
 from argparse import RawTextHelpFormatter
 import sys
 import os
-import StringIO
+import io
 from Bio import SeqIO
 from Bio.Seq import Seq
 from Bio.SeqRecord import SeqRecord
@@ -43,6 +40,11 @@ def facheck(f):
 		return 1
 	s.close()
 
+# Check dependencies
+def checkmuscle():
+	muscle = subprocess.Popen(['muscle', '-help'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, universal_newlines=True)
+	stderr = muscle.communicate()
+
 # Get sequences from FASTA files
 def seqBLAST(f, id, cov):
 	msg('Extracting sequences from {} ...'.format(f))
@@ -51,7 +53,7 @@ def seqBLAST(f, id, cov):
 		query = str(seq.seq)
 		fBLAST = NcbiblastnCommandline(task='blastn', subject=f, evalue=1e-10, perc_identity=90, outfmt=5, dust='no', qcov_hsp_perc=80, culling_limit=1)
 		stdout, stderr = fBLAST(stdin=query)
-		xmlFILE = StringIO.StringIO()
+		xmlFILE = io.StringIO()
 		xmlFILE.write(stdout)
 		xmlFILE.seek(0)
 		blastREC = NCBIXML.read(xmlFILE)
@@ -81,9 +83,17 @@ parser.add_argument('--id', metavar='%', nargs=1, default='90', help='percentage
 parser.add_argument('--cov', metavar='%', nargs=1, default='80', help='percentage coverage for BLAST match')
 parser.add_argument('--version', action='version', version=
 	'%(prog)s v0.1\n'
-	'Updated 27-Sep-2016 by Jason Kwong\n'
-	'Dependencies: Python 2.x, BioPython, BLAST')
+	'Updated 27-May-2021 by Jason Kwong\n'
+	'Dependencies: Python 3.x, BioPython, BLAST, muscle')
 args = parser.parse_args()
+
+# Check muscle is installed
+checkmuscle()
+# Check output file
+if args.out:
+	if (os.path.isfile(args.out[0])):
+		msg('ERROR: {} already exists. Please specify another output file.'.format(args.out[0]))
+		sys.exit(1)
 
 # Set buffer size
 buffer = 'N'*300
@@ -114,7 +124,7 @@ stdout, stderr = muscle.communicate(input=allSEQS)
 
 # Print results to stdout or file
 if args.out:
-	with open(args.out[0], 'wb') as file:
+	with open(args.out[0], 'w') as file:
 		file.write(stdout)
 else:
 	print(stdout)

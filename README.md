@@ -6,7 +6,7 @@ Reworked version of Torsten Seemann's gene-puller.pl script. Retrieves aligned g
 Jason Kwong (@kwongjc)
 
 ## Dependencies
-* Python 2.7.x
+* Python 3.x
 * BLAST+
 * MUSCLE
 * BioPython
